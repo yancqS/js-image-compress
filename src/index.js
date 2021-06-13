@@ -98,4 +98,22 @@
   _proto.blob2Image = function blob2Image(blob, callback = log) {
     return _proto.file2Image(blob, callback);
   }
+
+  _proto.upload = function upload(url, file, callback) {
+    var xhr = new XMLHttpRequest();
+    var fd = new FormData();
+    fd.append('file', file);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          // 上传成功
+          callback && callback(xhr.responseText);
+        } else {
+          throw new Error(xhr);
+        }
+      }
+    }
+    xhr.open('POST', url, true);
+    xhr.send(fd);
+  }
 })(window)
