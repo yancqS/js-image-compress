@@ -1,56 +1,57 @@
-(function(win) {
-  function imgCompress() {}
+(function (win) {
+  function imgCompress() { }
   let _proto = imgCompress.prototype;
   let log = console.log;
   win.imgCompress = imgCompress;
 
   _proto.file2DataUrl = function file2DataUrl(file, callback = log) {
-    let reader = new FileReader();
-    reader.onload = function() {
-      _proto.url2Image(reader.result, callback);
-      callback('loaded in file2DataUrl', reader.result.slice(0, 50));
-    }
-    reader.readAsDataURL(file);
+    return new Promise((resolve, reject) => {
+      let reader = new FileReader();
+      reader.onload = function () {
+        callback('loaded in file2DataUrl', reader.result.slice(0, 50));
+        resolve(reader.result)
+      }
+      reader.readAsDataURL(file);
+    })
   }
 
   _proto.file2Image = function file2Image(file, callback = log) {
-    let img = new Image();
-    let URL = win.webkitURL || win.URL;
-    if(URL) {
-      let url = URL.createObjectURL(file);
-      img.onload = function() {
-        callback('loaded in file2Image', url);
-        document.body.querySelector('.imgList').appendChild(img);
-
-        let canvas = _proto.img2Canvas(img);
-        document.body.querySelector('.imgList').appendChild(canvas);
-
-        let canvas_url = _proto.canvas2DataUrl(canvas, 0.1, 'image/webp');
-        _proto.url2Image(canvas_url);
-
-        _proto.dataUrl2Image(canvas_url);
-
-        URL.revokeObjectURL(url);
-      };
-      img.src = url;
-    }
+    return new Promise((resolve, reject) => {
+      let img = new Image();
+      let URL = win.webkitURL || win.URL;
+      if (URL) {
+        let url = URL.createObjectURL(file);
+        img.onload = function () {
+          callback('loaded in file2Image', url);
+          document.body.querySelector('.imgList').appendChild(img);
+          URL.revokeObjectURL(url);
+          resolve(img);
+        };
+        img.src = url;
+      }
+    })
   }
 
   _proto.url2Image = function url2Image(url, callback = log) {
-    let img = new Image();
-    img.onload = function() {
-      callback('loaded in url2Image', img);
-      document.body.querySelector('.imgList').appendChild(img);
-    }
-    img.src = url;
+    return new Promise((resolve, reject) => {
+      let img = new Image();
+      img.onload = function () {
+        callback('loaded in url2Image', img);
+        document.body.querySelector('.imgList').appendChild(img);
+        resolve(img);
+      }
+      img.src = url;
+    })
   }
 
-  _proto.img2Canvas = function img2Canvas(img) {
+  _proto.img2Canvas = function img2Canvas(img, callback = log) {
     let canvas = document.createElement('canvas');
     let ctx = canvas.getContext('2d');
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    document.body.querySelector('.imgList').appendChild(canvas);
+    callback('loaded in img2Canvas', canvas);
     return canvas;
   }
 
@@ -59,11 +60,42 @@
   }
 
   _proto.dataUrl2Image = function dataUrl2Image(url, callback = log) {
-    let img = new Image();
-    img.onload = function() {
-      document.body.querySelector('.imgList').appendChild(img);
-      callback(img);
-    };
-    img.src = url;
+    return new Promise((resolve, reject) => {
+      let img = new Image();
+      img.onload = function () {
+        callback('loaded in dataUrl2Image', img);
+        document.body.querySelector('.imgList').appendChild(img);
+        resolve(img);
+      }
+      img.src = url;
+    })
+  }
+
+  _proto.dataUrl2Blob = function dataUrl2Blob(dataUrl, type) {
+    let data = dataUrl.split(',')[1];
+    let mimePattern = /^data:(.*);base64,/;
+    let mime = dataUrl.match(mimePattern)[1];
+    let binStr = atob(data); // base64解码
+    let len = binStr.length;
+    let arr = new Uint8Array(len);
+
+    for (let i = 0; i < len; i++) {
+      arr[i] = binStr.charCodeAt(i);
+    }
+    return new Blob([arr], { type: type || mime });
+  }
+
+  _proto.canvas2Blob = function canvas2Blob(canvas, callback = log, quality, type) {
+    canvas.toBlob(blob => {
+      callback(blob);
+    }, type || 'image/jpeg', quality || 0.8);
+  }
+
+  _proto.blob2DataUrl = function blob2DataUrl(blob, callback = log) {
+    return _proto.file2DataUrl(blob, callback);
+  }
+
+  _proto.blob2Image = function blob2Image(blob, callback = log) {
+    return _proto.file2Image(blob, callback);
   }
 })(window)

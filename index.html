@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,26 +14,60 @@
       flex-wrap: wrap;
       flex: 1 1 auto;
     }
-    .imgList img, .imgList canvas {
+
+    .imgList img,
+    .imgList canvas {
       margin-top: 20px;
       border-radius: 12px;
     }
   </style>
 </head>
+
 <body>
-  <input type="file" onchange="handleChange(event)"/>
+  <input type="file" onchange="handleChange(event)" />
   <div class="imgList"></div>
 </body>
 <script src="./src/index.js"></script>
 <script>
   let mini = new imgCompress();
-  function handleChange(e) {
+  async function handleChange(e) {
     let file = e.target.files[0];
 
-    mini.file2DataUrl(file);
-    mini.file2Image(file);
+    let url = await mini.file2DataUrl(file);
+    mini.url2Image(url); // 1st image
+    upload('http://127.0.0.1:3000/upload', file, console.log);
+    // mini.dataUrl2Image(url); // 2nd image
+
+    // let img = await mini.file2Image(file); // 3rd image
+    // let canvas = mini.img2Canvas(img); // 4th canvas
+
+    // let canvas_url = mini.canvas2DataUrl(canvas, 0.4, 'image/webp');
+    // mini.url2Image(canvas_url); // 5th compress image
+
+    // let blob = mini.dataUrl2Blob(canvas_url);
+    // let blob_img = await mini.blob2Image(blob); // 6th image compress (因为传参为压缩的canvas_url)
+    // let blob_url = await mini.blob2DataUrl(blob);
+  }
+
+  function upload(url, file, callback) {
+    var xhr = new XMLHttpRequest();
+    var fd = new FormData();
+    fd.append('file', file);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          // 上传成功
+          callback && callback(xhr.responseText);
+        } else {
+          throw new Error(xhr);
+        }
+      }
+    }
+    xhr.open('POST', url, true);
+    xhr.send(fd);
   }
 </script>
 <script>
 </script>
+
 </html>
