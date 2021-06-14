@@ -10,13 +10,6 @@
     .setting_zone {
       display: flex;
     }
-    .imgList {
-      width: 1220px;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      flex: 1 1 auto;
-    }
 
     .imgList img,
     .imgList canvas {
@@ -31,34 +24,53 @@
     <div>
       <input type="file" onchange="handleChange(event)" />
     </div>
-    <div>
-      <h3>设置参数</h3>
-    </div>
   </div>
 
   <div class="imgList"></div>
 </body>
-<script src="./src/index.js"></script>
+<script src="./src/index_1.js"></script>
 <script>
-  let mini = new imgCompress();
-  async function handleChange(e) {
-    let file = e.target.files[0];
+  // let mini = new imgCompress();
+  // async function handleChange(e) {
+  //   let file = e.target.files[0];
 
-    let url = await mini.file2DataUrl(file);
-    mini.url2Image(url); // 1st image
-    mini.upload('http://127.0.0.1:3000/upload', file, console.log);
-    // mini.dataUrl2Image(url); // 2nd image
+  //   let url = await mini.file2DataUrl(file);
+  //   mini.url2Image(url); // 1st image
+  //   mini.upload('http://127.0.0.1:3000/upload', file, console.log);
+  //   // mini.dataUrl2Image(url); // 2nd image
 
-    let img = await mini.file2Image(file); // 3rd image
-    let canvas = mini.img2Canvas(img); // 4th canvas
+  //   let img = await mini.file2Image(file); // 3rd image
+  //   let canvas = mini.img2Canvas(img); // 4th canvas
 
-    let canvas_url = mini.canvas2DataUrl(canvas, 0.4, 'image/webp');
-    // mini.url2Image(canvas_url); // 5th compress image
+  //   let canvas_url = mini.canvas2DataUrl(canvas, 0.4, 'image/webp');
+  //   // mini.url2Image(canvas_url); // 5th compress image
 
-    let blob = mini.dataUrl2Blob(canvas_url);
-    mini.upload('http://127.0.0.1:3000/upload', blob, console.log);
-    // let blob_img = await mini.blob2Image(blob); // 6th image compress (因为传参为压缩的canvas_url)
-    // let blob_url = await mini.blob2DataUrl(blob);
+  //   let blob = mini.dataUrl2Blob(canvas_url);
+  //   mini.upload('http://127.0.0.1:3000/upload', blob, console.log);
+  //   // let blob_img = await mini.blob2Image(blob); // 6th image compress (因为传参为压缩的canvas_url)
+  //   // let blob_url = await mini.blob2DataUrl(blob);
+  // }
+
+  function handleChange(e) {
+    let options = {
+      file: e.target.files[0],
+      quality: 0.4,
+      mimeType: 'image/jpeg',
+      container: '.imgList',
+      upload_url: 'http://127.0.0.1:3000/upload',
+      width: 400,
+      height: 350,
+      watermark: 'watermark test',
+      beforeCompress: function(file) {
+        console.log('压缩之前图片大小：', file.size);
+        console.log('mime类型为：', file.type);
+      },
+      successCompress: function(file) {
+        console.log('压缩之前图片大小：', file.size);
+        console.log('mime类型为：', file.type);
+      }
+    }
+    new ImageCompress(options);
   }
 </script>
 <script>
