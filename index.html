@@ -52,22 +52,26 @@
   // }
 
   function handleChange(e) {
+    let file = e.target.files[0];
     let options = {
-      file: e.target.files[0],
+      file,
       quality: 0.4,
-      mimeType: 'image/jpeg',
+      mimeType: 'image/webp',
       container: '.imgList',
       upload_url: 'http://127.0.0.1:3000/upload',
-      width: 400,
-      height: 350,
+      width: 200,
+      height: 150,
       watermark: 'watermark test',
       beforeCompress: function(file) {
-        console.log('压缩之前图片大小：', file.size);
-        console.log('mime类型为：', file.type);
+        console.table([
+          {beforeCompress: file.size, mimeType: file.type}
+        ])
       },
-      successCompress: function(file) {
-        console.log('压缩之前图片大小：', file.size);
-        console.log('mime类型为：', file.type);
+      successCompress: function(blob) {
+        console.table([
+          {afterCompress: blob.size, mimeType: blob.type}
+        ])
+        console.log('压缩率为：', ((file.size - blob.size) / file.size * 100).toFixed(2) + '%');
       }
     }
     new ImageCompress(options);

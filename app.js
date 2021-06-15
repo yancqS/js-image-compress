@@ -18,7 +18,7 @@ app.all('*', (req, res, next) => {
 app.post('/upload', upload.any(), (req, res, next) => {
   res.send(`上传成功: 文件大小为${Math.floor(req.files[0].size / 1000)}K`);
   let { name, ext } = path.parse(req.files[0].originalname);
-  fs.rename(`${dest}${req.files[0].filename}`, `${dest}${name}_${new Date().getTime()}${ext || '.jpeg'}`, (err) => {
+  fs.rename(`${dest}${req.files[0].filename}`, `${dest}${name}_${new Date().getTime()}${ext || '.' + req.files[0].mimetype.slice(6)}`, (err) => {
     if (err) throw new Error(err);
     console.log('重命名完成');
   });
