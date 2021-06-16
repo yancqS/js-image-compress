@@ -30,27 +30,6 @@
 </body>
 <script src="./src/main.js"></script>
 <script>
-  // let mini = new imgCompress();
-  // async function handleChange(e) {
-  //   let file = e.target.files[0];
-
-  //   let url = await mini.file2DataUrl(file);
-  //   mini.url2Image(url); // 1st image
-  //   mini.upload('http://127.0.0.1:3000/upload', file, console.log);
-  //   // mini.dataUrl2Image(url); // 2nd image
-
-  //   let img = await mini.file2Image(file); // 3rd image
-  //   let canvas = mini.img2Canvas(img); // 4th canvas
-
-  //   let canvas_url = mini.canvas2DataUrl(canvas, 0.4, 'image/webp');
-  //   // mini.url2Image(canvas_url); // 5th compress image
-
-  //   let blob = mini.dataUrl2Blob(canvas_url);
-  //   mini.upload('http://127.0.0.1:3000/upload', blob, console.log);
-  //   // let blob_img = await mini.blob2Image(blob); // 6th image compress (因为传参为压缩的canvas_url)
-  //   // let blob_url = await mini.blob2DataUrl(blob);
-  // }
-
   function handleChange(e) {
     let file = e.target.files[0];
     let options = {
