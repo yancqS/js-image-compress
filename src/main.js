@@ -47,7 +47,7 @@ class ImageCompress {
   }
 
   file2Image(file) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       let img = new Image();
       let URL = window.webkitURL || window.URL;
       if (URL) {
@@ -57,6 +57,12 @@ class ImageCompress {
           resolve(img);
         };
         img.src = url;
+      } else {
+        const dataUrl = await this.file2DataUrl(file);
+        img.onload = function () {
+          resolve(img);
+        };
+        img.src = dataUrl;
       }
     })
   }
