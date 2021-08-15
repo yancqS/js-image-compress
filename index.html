@@ -35,12 +35,9 @@
     let options = {
       file,
       quality: 0.4,
-      mimeType: 'image/webp',
+      mimeType: 'image/jpeg',
       container: '.imgList',
       upload_url: 'http://127.0.0.1:3000/upload',
-      width: 200,
-      height: 150,
-      watermark: 'watermark test',
       beforeCompress: function(file) {
         console.table([
           {beforeCompress: file.size, mimeType: file.type}
