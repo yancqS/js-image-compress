@@ -4,7 +4,6 @@ class ImageCompress {
     file: null,
     quality: 0.8
   };
-  isFunc = fn => typeof fn === 'function';
   isImage = type => this.REGEXP_IMAGE_TYPE.test(type);
 
   constructor(options) {
@@ -47,7 +46,7 @@ class ImageCompress {
   }
 
   file2Image(file) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
       let img = new Image();
       let URL = window.webkitURL || window.URL;
       if (URL) {
@@ -68,7 +67,7 @@ class ImageCompress {
   }
 
   file2DataUrl(file) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let reader = new FileReader();
       reader.onload = function () {
         resolve(reader.result)
@@ -88,7 +87,7 @@ class ImageCompress {
   }
 
   canvas2Blog(canvas, quality, type) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       canvas.toBlob(blob => {
         resolve(blob);
       }, type || 'image/jpeg', quality || 0.8);
@@ -96,8 +95,8 @@ class ImageCompress {
   }
 
   upload(url, file, callback) {
-    var xhr = new XMLHttpRequest();
-    var fd = new FormData();
+    const xhr = new XMLHttpRequest();
+    const fd = new FormData();
     fd.append('file', file);
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
@@ -105,7 +104,7 @@ class ImageCompress {
           // 上传成功
           callback && callback(xhr.responseText);
         } else {
-          throw new Error(xhr);
+          throw new Error('upload fail');
         }
       }
     }

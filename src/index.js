@@ -1,11 +1,11 @@
 (function (win) {
-  function imgCompress() { }
-  let _proto = imgCompress.prototype;
+  function ImgCompress() { }
+  let _proto = ImgCompress.prototype;
   let log = console.log;
-  win.imgCompress = imgCompress;
+  win.imgCompress = ImgCompress;
 
   _proto.file2DataUrl = function file2DataUrl(file, callback = log) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let reader = new FileReader();
       reader.onload = function () {
         callback('loaded in file2DataUrl', reader.result.slice(0, 50));
@@ -16,7 +16,7 @@
   }
 
   _proto.file2Image = function file2Image(file, callback = log) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let img = new Image();
       let URL = win.webkitURL || win.URL;
       if (URL) {
@@ -33,7 +33,7 @@
   }
 
   _proto.url2Image = function url2Image(url, callback = log) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let img = new Image();
       img.onload = function () {
         callback('loaded in url2Image', img);
@@ -60,7 +60,7 @@
   }
 
   _proto.dataUrl2Image = function dataUrl2Image(url, callback = log) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let img = new Image();
       img.onload = function () {
         callback('loaded in dataUrl2Image', img);
@@ -100,8 +100,8 @@
   }
 
   _proto.upload = function upload(url, file, callback) {
-    var xhr = new XMLHttpRequest();
-    var fd = new FormData();
+    const xhr = new XMLHttpRequest();
+    const fd = new FormData();
     fd.append('file', file);
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
@@ -109,7 +109,7 @@
           // 上传成功
           callback && callback(xhr.responseText);
         } else {
-          throw new Error(xhr);
+          throw new Error('upload fail');
         }
       }
     }
