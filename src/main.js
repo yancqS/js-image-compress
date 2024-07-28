@@ -15,7 +15,6 @@ class ImageCompress {
   async init() {
     let file = this.file;
     let options = this.options;
-
     if (!file || !this.isImage(file.type)) {
       console.error('请上传图片');
     }

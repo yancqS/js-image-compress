@@ -1,5 +1,7 @@
 (function (win) {
-  function ImgCompress() { }
+  function ImgCompress() {
+  }
+
   let _proto = ImgCompress.prototype;
   let log = console.log;
   win.imgCompress = ImgCompress;
@@ -82,7 +84,7 @@
     for (let i = 0; i < len; i++) {
       arr[i] = binStr.charCodeAt(i);
     }
-    return new Blob([arr], { type: type || mime });
+    return new Blob([arr], {type: type || mime});
   }
 
   _proto.canvas2Blob = function canvas2Blob(canvas, callback = log, quality, type) {
